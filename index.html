@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>北念导航平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        /* 基础样式 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: #f0f2f5; color: #1a1a1a; }
+        
+        /* 交互效果 */
+        .card-hover { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); }
+        .btn-effect { transition: all 0.2s ease; }
+        .btn-effect:active { transform: scale(0.95); }
+        
+        /* 渐变样式 */
+        .bg-gradient-primary { background: linear-gradient(135deg, #2563eb, #3b82f6); }
+        
+        /* 弹窗基础样式 */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 18px;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .modal-close:hover { color: #333; }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- 欢迎弹窗 -->
+    <div class="modal active" id="welcomeModal">
+        <div class="modal-content">
+            <i class="fa fa-times modal-close" data-modal="welcomeModal"></i>
+            <h3 class="text-lg font-bold text-blue-600 text-center mb-4">欢迎使用北念导航平台</h3>
+            <p class="text-sm text-gray-600 mb-5 leading-relaxed">
+                感谢您选择北念导航平台！这里为您提供安全、稳定、高效的导航服务，包含接码、卡网跳转等核心功能，祝您使用愉快～
+            </p>
+            <button class="w-full py-2 bg-blue-600 text-white rounded-lg btn-effect" data-modal="welcomeModal">立即体验</button>
+        </div>
+    </div>
+
+    <!-- QQ客服弹窗（预留QQ添加好友图片位置） -->
+    <div class="modal" id="qqModal">
+        <div class="modal-content">
+            <i class="fa fa-times modal-close" data-modal="qqModal"></i>
+            <h3 class="text-lg font-bold text-blue-600 text-center mb-4">QQ客服</h3>
+            <!-- 请替换为你的QQ添加好友二维码图片链接 -->
+            <img src="https://example.com/your-qq-qrcode.png" alt="北念QQ添加好友二维码" class="w-full max-w-[280px] mx-auto mb-3">
+            <p class="text-sm text-gray-600 text-center mb-5">
+                QQ号：3633138540<br>
+                扫一扫加我为好友
+            </p>
+            <button class="w-full py-2 bg-blue-600 text-white rounded-lg btn-effect" data-modal="qqModal">我已知晓</button>
+        </div>
+    </div>
+
+    <!-- 登录教程选择弹窗 -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <i class="fa fa-times modal-close" data-modal="loginModal"></i>
+            <h3 class="text-lg font-bold text-blue-600 text-center mb-4">选择登录教程</h3>
+            <div class="space-y-3 mb-5">
+                <button class="w-full py-3 border border-gray-200 rounded-lg text-left pl-4 flex items-center justify-between btn-effect" data-modal-open="twitterTutorialModal">
+                    <span>推特登录教程</span>
+                    <i class="fa fa-arrow-right text-gray-400"></i>
+                </button>
+                <button class="w-full py-3 border border-gray-200 rounded-lg text-left pl-4 flex items-center justify-between btn-effect" data-modal-open="facebookTutorialModal">
+                    <span>脸书登录教程</span>
+                    <i class="fa fa-arrow-right text-gray-400"></i>
+                </button>
+            </div>
+            <button class="w-full py-2 bg-gray-100 text-gray-600 rounded-lg btn-effect" data-modal="loginModal">取消</button>
+        </div>
+    </div>
+
+    <!-- 推特登录教程弹窗 -->
+    <div class="modal" id="twitterTutorialModal">
+        <div class="modal-content">
+            <i class="fa fa-times modal-close" data-modal="twitterTutorialModal"></i>
+            <h3 class="text-lg font-bold text-blue-600 text-center mb-4">推特登录教程</h3>
+            <div class="text-sm text-gray-600 mb-5 leading-relaxed space-y-2">
+                <p>1. 打开推特官网或APP，点击“登录”按钮</p>
+                <p>2. 输入已注册的账号（邮箱/手机号）和密码</p>
+                <p>3. 若需验证，按提示完成短信或邮箱验证</p>
+                <p>4. 验证通过后即可成功登录</p>
+            </div>
+            <button class="w-full py-2 bg-blue-600 text-white rounded-lg btn-effect" data-modal="twitterTutorialModal">我已知晓</button>
+        </div>
+    </div>
+
+    <!-- 脸书登录教程弹窗 -->
+    <div class="modal" id="facebookTutorialModal">
+        <div class="modal-content">
+            <i class="fa fa-times modal-close" data-modal="facebookTutorialModal"></i>
+            <h3 class="text-lg font-bold text-blue-600 text-center mb-4">脸书登录教程</h3>
+            <div class="text-sm text-gray-600 mb-5 leading-relaxed space-y-2">
+                <p>1. 访问脸书官网或打开APP，点击“登录”</p>
+                <p>2. 输入注册时使用的邮箱/手机号和密码</p>
+                <p>3. 如遇安全验证，按指引完成身份确认</p>
+                <p>4. 验证通过后即可登录账号</p>
+            </div>
+            <button class="w-full py-2 bg-blue-600 text-white rounded-lg btn-effect" data-modal="facebookTutorialModal">我已知晓</button>
+        </div>
+    </div>
+
+    <!-- 使用协议弹窗 -->
+    <div class="modal" id="termsModal">
+        <div class="modal-content">
+            <i class="fa fa-times modal-close" data-modal="termsModal"></i>
+            <h3 class="text-lg font-bold text-blue-600 text-center mb-4">使用协议</h3>
+            <p class="text-sm text-gray-600 mb-5 leading-relaxed">
+                1. 您在使用本平台服务前，应仔细阅读并遵守本协议所有条款<br><br>
+                2. 本平台仅提供导航服务，不对第三方链接内容承担责任<br><br>
+                3. 禁止使用本平台进行违法违规操作，否则将追究相关责任
+            </p>
+            <button class="w-full py-2 bg-blue-600 text-white rounded-lg btn-effect" data-modal="termsModal">我已知晓</button>
+        </div>
+    </div>
+
+    <!-- 隐私政策弹窗 -->
+    <div class="modal" id="privacyModal">
+        <div class="modal-content">
+            <i class="fa fa-times modal-close" data-modal="privacyModal"></i>
+            <h3 class="text-lg font-bold text-blue-600 text-center mb-4">隐私政策</h3>
+            <p class="text-sm text-gray-600 mb-5 leading-relaxed">
+                1. 本平台尊重并保护用户的个人隐私信息<br><br>
+                2. 我们不会主动收集、存储用户的敏感信息<br><br>
+                3. 第三方链接的隐私政策由对应网站自行负责
+            </p>
+            <button class="w-full py-2 bg-blue-600 text-white rounded-lg btn-effect" data-modal="privacyModal">我已知晓</button>
+        </div>
+    </div>
+
+    <!-- 关于我们弹窗 -->
+    <div class="modal" id="aboutModal">
+        <div class="modal-content">
+            <i class="fa fa-times modal-close" data-modal="aboutModal"></i>
+            <h3 class="text-lg font-bold text-blue-600 text-center mb-4">关于我们</h3>
+            <p class="text-sm text-gray-600 mb-5 leading-relaxed">
+                北念导航平台是一款专注于提供安全、便捷导航服务的工具类平台<br><br>
+                核心功能：接码服务、卡网跳转、登录教程查询等
+            </p>
+            <button class="w-full py-2 bg-blue-600 text-white rounded-lg btn-effect" data-modal="aboutModal">我已知晓</button>
+        </div>
+    </div>
+
+    <!-- 主体内容 -->
+    <main class="pt-4 pb-8">
+        <!-- 头部Banner -->
+        <section class="bg-gradient-primary text-white py-8 text-center rounded-b-3xl shadow-md">
+            <div class="w-24 h-24 bg-white rounded-full mx-auto flex items-center justify-center mb-4 shadow-lg">
+                <span class="text-blue-600 text-4xl font-bold">BN</span>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">北念导航平台</h2>
+            <p class="text-sm opacity-90 max-w-xs mx-auto">安全、稳定、高效的导航服务，为您的使用保驾护航</p>
+        </section>
+
+        <!-- 平台公告 -->
+        <section class="bg-white rounded-xl shadow-sm m-4 p-5 card-hover mt-6">
+            <div class="flex items-center mb-3">
+                <i class="fa fa-bullhorn text-blue-600 mr-2 text-lg"></i>
+                <h3 class="font-bold text-lg">平台公告</h3>
+            </div>
+            <p class="text-red-500 font-medium mb-4 text-sm">注意通知：推特解锁看登录教程</p>
+            <div class="flex items-center bg-blue-50 rounded-lg p-3">
+                <span class="inline-block w-6 h-6 bg-blue-100 text-blue-600 rounded-full text-center text-xs leading-6 mr-3">①</span>
+                <span class="text-sm flex-1">常见问题及解决方法</span>
+                <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm btn-effect">点击查看</button>
+            </div>
+        </section>
+
+        <!-- 核心功能 -->
+        <section class="m-4">
+            <div class="flex items-center mb-4">
+                <i class="fa fa-cubes text-blue-600 mr-2 text-lg"></i>
+                <h3 class="font-bold text-lg">核心功能</h3>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+                <!-- 北念新接码 -->
+                <a href="https://your-new-jiema-link.com" target="_blank" class="block">
+                    <div class="bg-white rounded-xl p-4 text-center shadow-sm card-hover">
+                        <div class="w-14 h-14 bg-blue-100 rounded-full mx-auto flex items-center justify-center text-blue-600 text-xl mb-3">
+                            <i class="fa fa-mobile"></i>
+                        </div>
+                        <p class="text-sm font-medium whitespace-nowrap">北念新接码</p>
+                    </div>
+                </a>
+                <!-- 登录教程（点击弹选择窗） -->
+                <div class="block cursor-pointer" data-modal-open="loginModal">
+                    <div class="bg-white rounded-xl p-4 text-center shadow-sm card-hover">
+                        <div class="w-14 h-14 bg-blue-100 rounded-full mx-auto flex items-center justify-center text-blue-600 text-xl mb-3">
+                            <i class="fa fa-key"></i>
+                        </div>
+                        <p class="text-sm font-medium whitespace-nowrap">登录教程</p>
+                    </div>
+                </div>
+                <!-- 跳转卡网（已更新实际链接） -->
+                <a href="https://shop.682fk.com/shop/BNXNJNB666" target="_blank" class="block">
+                    <div class="bg-white rounded-xl p-4 text-center shadow-sm card-hover">
+                        <div class="w-14 h-14 bg-blue-100 rounded-full mx-auto flex items-center justify-center text-blue-600 text-xl mb-3">
+                            <i class="fa fa-link"></i>
+                        </div>
+                        <p class="text-sm font-medium whitespace-nowrap">跳转卡网</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- 客服支持 -->
+        <section class="m-4">
+            <div class="flex items-center mb-4">
+                <i class="fa fa-headphones text-blue-600 mr-2 text-lg"></i>
+                <h3 class="font-bold text-lg">客服支持</h3>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <!-- QQ客服（点击弹二维码） -->
+                <div class="block cursor-pointer" data-modal-open="qqModal">
+                    <div class="bg-white rounded-xl p-4 text-center shadow-sm card-hover">
+                        <div class="w-14 h-14 bg-blue-100 rounded-full mx-auto flex items-center justify-center text-blue-600 text-xl mb-3">
+                            <i class="fa fa-qq"></i>
+                        </div>
+                        <p class="text-sm font-medium whitespace-nowrap">QQ客服</p>
+                    </div>
+                </div>
+                <!-- TG客服（跳转指定链接） -->
+                <a href="https://t.me/BeiNianNB66" target="_blank" class="block">
+                    <div class="bg-white rounded-xl p-4 text-center shadow-sm card-hover">
+                        <div class="w-14 h-14 bg-sky-100 rounded-full mx-auto flex items-center justify-center text-sky-600 text-xl mb-3">
+                            <i class="fa fa-paper-plane"></i>
+                        </div>
+                        <p class="text-sm font-medium whitespace-nowrap">TG客服</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- 底部信息 -->
+    <footer class="bg-white py-4 px-4 text-center text-gray-500 text-xs mt-6">
+        <div class="flex justify-center space-x-4 mb-2">
+            <span class="hover:text-blue-600 transition cursor-pointer" data-modal-open="termsModal">使用协议</span>
+            <span class="hover:text-blue-600 transition cursor-pointer" data-modal-open="privacyModal">隐私政策</span>
+            <span class="hover:text-blue-600 transition cursor-pointer" data-modal-open="aboutModal">关于我们</span>
+        </div>
+        <p>© 2025 北念导航平台 版权所有</p>
+    </footer>
+
+    <!-- 统一弹窗控制脚本 -->
+    <script>
+        // 弹窗控制逻辑（统一管理，修复交互bug）
+        document.addEventListener('click', (e) => {
+            // 打开弹窗
+            if (e.target.closest('[data-modal-open]')) {
+                const modalId = e.target.closest('[data-modal-open]').dataset.modalOpen;
+                document.getElementById(modalId).classList.add('active');
+            }
+            // 关闭弹窗
+            if (e.target.closest('[data-modal]')) {
+                const modalId = e.target.closest('[data-modal]').dataset.modal;
+                document.getElementById(modalId).classList.remove('active');
+            }
+        });
+
+        // 点击反馈增强
+        document.querySelectorAll('.btn-effect, .card-hover').forEach(el => {
+            el.addEventListener('touchstart', () => el.classList.add('opacity-90'));
+            el.addEventListener('touchend', () => el.classList.remove('opacity-90'));
+        });
+    </script>
+</body>
+</html>
